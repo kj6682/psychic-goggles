@@ -1,4 +1,4 @@
-package com.example.library_backend;
+package org.kj6682.library_backend;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

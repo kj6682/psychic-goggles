@@ -1,4 +1,4 @@
-package com.example.library_backend;
+package org.kj6682.library_backend;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
