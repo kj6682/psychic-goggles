@@ -103,7 +103,10 @@ function App() {
               className="form-input"
               placeholder="Search by title..."
               value={query}
-              onChange={(e) => setQuery(e.target.value)}
+              onChange={(e) => {
+                setQuery(e.target.value);
+                setCurrentPage(0);
+              }}
               style={{ width: '300px' }}
             />
           </div>
