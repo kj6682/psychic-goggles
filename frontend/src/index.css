@@ -11,6 +11,30 @@
   --font-family: 'Inter', system-ui, -apple-system, sans-serif;
 }
 
+.language-switcher {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  display: flex;
+  gap: 0.5rem;
+}
+
+.lang-btn {
+  background: transparent;
+  border: 1px solid var(--border-color);
+  color: var(--text-secondary);
+  padding: 0.25rem 0.5rem;
+  font-size: 0.75rem;
+  border-radius: 0.25rem;
+}
+
+.lang-btn.active {
+  background: var(--accent-color);
+  color: #0f172a;
+  border-color: var(--accent-color);
+  font-weight: bold;
+}
+
 body {
   margin: 0;
   font-family: var(--font-family);
@@ -20,7 +44,7 @@ body {
   display: flex;
   justify-content: center;
   padding: 2rem;
-  background-image: 
+  background-image:
     radial-gradient(circle at 10% 20%, rgba(56, 189, 248, 0.1) 0%, transparent 20%),
     radial-gradient(circle at 90% 80%, rgba(139, 92, 246, 0.1) 0%, transparent 20%);
 }
@@ -30,7 +54,9 @@ body {
   max-width: 1200px;
 }
 
-h1, h2, h3 {
+h1,
+h2,
+h3 {
   margin: 0;
   font-weight: 600;
   letter-spacing: -0.025em;
@@ -43,7 +69,8 @@ button {
   transition: all 0.2s ease;
 }
 
-input, select {
+input,
+select {
   font-family: inherit;
   outline: none;
 }
@@ -134,7 +161,8 @@ table {
   -webkit-backdrop-filter: blur(12px);
 }
 
-th, td {
+th,
+td {
   padding: 1rem;
   text-align: left;
   border-bottom: 1px solid var(--border-color);

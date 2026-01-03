@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import './index.css';
+import { translations } from './translations';
 
 function App() {
   const [items, setItems] = useState([]);
@@ -8,6 +9,7 @@ function App() {
   const [query, setQuery] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingItem, setEditingItem] = useState(null);
+  const [language, setLanguage] = useState('en');
 
   const [formData, setFormData] = useState({
     title: '',
@@ -16,6 +18,10 @@ function App() {
     category: '',
     location: ''
   });
+
+  const t = (path) => {
+    return path.split('.').reduce((obj, key) => obj?.[key], translations[language]) || path;
+  };
 
   const fetchItems = async () => {
     try {
@@ -78,7 +84,7 @@ function App() {
   };
 
   const handleDelete = async (id) => {
-    if (!confirm("Are you sure?")) return;
+    if (!confirm(t('actions.confirmDelete'))) return;
     try {
       await fetch(`http://localhost:8080/api/items/${id}`, { method: 'DELETE' });
       fetchItems();
@@ -89,11 +95,26 @@ function App() {
 
   return (
     <div className="app">
+      <div className="language-switcher">
+        <button
+          className={`lang-btn ${language === 'en' ? 'active' : ''}`}
+          onClick={() => setLanguage('en')}
+        >
+          EN
+        </button>
+        <button
+          className={`lang-btn ${language === 'es' ? 'active' : ''}`}
+          onClick={() => setLanguage('es')}
+        >
+          ES
+        </button>
+      </div>
+
       <header className="app-header">
         <h1 style={{ fontSize: '2.5rem', background: 'linear-gradient(to right, #38bdf8, #818cf8)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
-          Personal Library
+          {t('appTitle')}
         </h1>
-        <p style={{ color: 'var(--text-secondary)' }}>Manage your collection with style</p>
+        <p style={{ color: 'var(--text-secondary)' }}>{t('appSubtitle')}</p>
       </header>
 
       <div style={{ maxWidth: '1000px', margin: '0 auto' }}>
@@ -101,7 +122,7 @@ function App() {
           <div className="search-bar">
             <input
               className="form-input"
-              placeholder="Search by title..."
+              placeholder={t('searchPlaceholder')}
               value={query}
               onChange={(e) => {
                 setQuery(e.target.value);
@@ -111,7 +132,7 @@ function App() {
             />
           </div>
           <button className="btn-primary" onClick={() => openModal()}>
-            + Add New Item
+            {t('addBtn')}
           </button>
         </div>
 
@@ -119,12 +140,12 @@ function App() {
           <table>
             <thead>
               <tr>
-                <th>Title</th>
-                <th>Authors</th>
-                <th>Type</th>
-                <th>Category</th>
-                <th>Location</th>
-                <th>Actions</th>
+                <th>{t('table.title')}</th>
+                <th>{t('table.authors')}</th>
+                <th>{t('table.type')}</th>
+                <th>{t('table.category')}</th>
+                <th>{t('table.location')}</th>
+                <th>{t('table.actions')}</th>
               </tr>
             </thead>
             <tbody>
@@ -132,19 +153,19 @@ function App() {
                 <tr key={item.id}>
                   <td style={{ fontWeight: 500, color: '#f8fafc' }}>{item.title}</td>
                   <td>{item.authors}</td>
-                  <td><span className="tag" style={{ color: '#38bdf8' }}>{item.type}</span></td>
+                  <td><span className="tag" style={{ color: '#38bdf8' }}>{t(`types.${item.type.replace('-', '')}`) || item.type}</span></td>
                   <td><span className="tag" style={{ color: '#a78bfa' }}>{item.category}</span></td>
                   <td>{item.location}</td>
                   <td>
-                    <button onClick={() => openModal(item)} style={{ marginRight: '0.5rem', color: '#38bdf8', background: 'none' }}>Edit</button>
-                    <button onClick={() => handleDelete(item.id)} className="btn-danger" style={{ padding: '0.25rem 0.5rem' }}>Delete</button>
+                    <button onClick={() => openModal(item)} style={{ marginRight: '0.5rem', color: '#38bdf8', background: 'none' }}>{t('actions.edit')}</button>
+                    <button onClick={() => handleDelete(item.id)} className="btn-danger" style={{ padding: '0.25rem 0.5rem' }}>{t('actions.delete')}</button>
                   </td>
                 </tr>
               ))}
               {items.length === 0 && (
                 <tr>
                   <td colSpan="6" style={{ textAlign: 'center', padding: '2rem', color: 'var(--text-secondary)' }}>
-                    No items found.
+                    {t('table.empty')}
                   </td>
                 </tr>
               )}
@@ -157,14 +178,14 @@ function App() {
             disabled={currentPage === 0}
             onClick={() => setCurrentPage(currentPage - 1)}
           >
-            Previous
+            {t('pagination.previous')}
           </button>
-          <span>Page {currentPage + 1} of {totalPages === 0 ? 1 : totalPages}</span>
+          <span>{t('pagination.page')} {currentPage + 1} {t('pagination.of')} {totalPages === 0 ? 1 : totalPages}</span>
           <button
             disabled={currentPage >= totalPages - 1}
             onClick={() => setCurrentPage(currentPage + 1)}
           >
-            Next
+            {t('pagination.next')}
           </button>
         </div>
       </div>
@@ -172,39 +193,65 @@ function App() {
       {isModalOpen && (
         <div className="modal-overlay" onClick={closeModal}>
           <div className="modal-content" onClick={e => e.stopPropagation()}>
-            <h2 style={{ marginBottom: '1.5rem' }}>{editingItem ? 'Edit Item' : 'Add New Item'}</h2>
+            <h2 style={{ marginBottom: '1.5rem' }}>{editingItem ? t('modal.editTitle') : t('modal.addTitle')}</h2>
             <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
               <div>
-                <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.875rem' }}>Title</label>
-                <input className="form-input" name="title" value={formData.title} onChange={handleChange} required />
+                <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.875rem' }}>{t('modal.titleLabel')}</label>
+                <input
+                  className="form-input"
+                  name="title"
+                  value={formData.title}
+                  onChange={handleChange}
+                  placeholder={t('modal.placeholderTitle')}
+                  required
+                />
               </div>
               <div>
-                <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.875rem' }}>Authors</label>
-                <input className="form-input" name="authors" value={formData.authors} onChange={handleChange} required />
+                <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.875rem' }}>{t('modal.authorsLabel')}</label>
+                <input
+                  className="form-input"
+                  name="authors"
+                  value={formData.authors}
+                  onChange={handleChange}
+                  placeholder={t('modal.placeholderAuthors')}
+                  required
+                />
               </div>
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
                 <div>
-                  <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.875rem' }}>Type</label>
+                  <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.875rem' }}>{t('modal.typeLabel')}</label>
                   <select className="form-input" name="type" value={formData.type} onChange={handleChange}>
-                    <option value="Book">Book</option>
-                    <option value="E-Book">E-Book</option>
-                    <option value="Audiobook">Audiobook</option>
-                    <option value="Article">Article</option>
-                    <option value="Other">Other</option>
+                    <option value="Book">{t('types.Book')}</option>
+                    <option value="E-Book">{t('types.EBook')}</option>
+                    <option value="Audiobook">{t('types.Audiobook')}</option>
+                    <option value="Article">{t('types.Article')}</option>
+                    <option value="Other">{t('types.Other')}</option>
                   </select>
                 </div>
                 <div>
-                  <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.875rem' }}>Category</label>
-                  <input className="form-input" name="category" value={formData.category} onChange={handleChange} />
+                  <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.875rem' }}>{t('modal.categoryLabel')}</label>
+                  <input
+                    className="form-input"
+                    name="category"
+                    value={formData.category}
+                    onChange={handleChange}
+                    placeholder={t('modal.placeholderCategory')}
+                  />
                 </div>
               </div>
               <div>
-                <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.875rem' }}>Location</label>
-                <input className="form-input" name="location" value={formData.location} onChange={handleChange} />
+                <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.875rem' }}>{t('modal.locationLabel')}</label>
+                <input
+                  className="form-input"
+                  name="location"
+                  value={formData.location}
+                  onChange={handleChange}
+                  placeholder={t('modal.placeholderLocation')}
+                />
               </div>
               <div style={{ display: 'flex', gap: '1rem', marginTop: '1rem' }}>
-                <button type="submit" className="btn-primary" style={{ flex: 1 }}>Save</button>
-                <button type="button" onClick={closeModal} className="btn-danger" style={{ flex: 1 }}>Cancel</button>
+                <button type="submit" className="btn-primary" style={{ flex: 1 }}>{t('modal.save')}</button>
+                <button type="button" onClick={closeModal} className="btn-danger" style={{ flex: 1 }}>{t('modal.cancel')}</button>
               </div>
             </form>
           </div>
