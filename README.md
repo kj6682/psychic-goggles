@@ -53,4 +53,29 @@ npm run dev
 4.  **Edit**: Click "Edit" in the table row to modify an item.
 5.  **Delete**: Click "Delete" to remove an item.
 
+## SpringDoc OpenAPI (Swagger) Integration
+I have successfully added Swagger/OpenAPI documentation to the Spring Boot backend using springdoc-openapi.
+
+Changes
+1. Added Dependency
+Updated 
+backend/pom.xml
+ to include springdoc-openapi-starter-webmvc-ui.
+
+
+```xml
+<dependency>
+    <groupId>org.springdoc</groupId>
+    <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+    <version>2.8.5</version>
+</dependency>
+```
+How to Access Documentation
+Start the Backend: Run the application as usual:
+
+./mvnw spring-boot:run
+View Swagger UI: Open your browser to: http://localhost:8080/swagger-ui/index.html
+
+View OpenAPI Spec (JSON): http://localhost:8080/v3/api-docs
+
 Enjoy your new personal library!
