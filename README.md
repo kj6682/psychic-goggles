@@ -78,4 +78,20 @@ View Swagger UI: Open your browser to: http://localhost:8080/swagger-ui/index.ht
 
 View OpenAPI Spec (JSON): http://localhost:8080/v3/api-docs
 
+## Secure API Controller with API Key
+I have implemented a new secure controller endpoint that requires an API key for access.
+
+### 1. Make Authenticated Requests
+To access the secure endpoints, you **must** include the header:
+
+```bash
+curl -H "X-API-KEY: secret-api-key-12345" http://localhost:8080/api/v1/secure/items
+```
+
+### 2. Verify Security
+Try accessing without the key to confirm it is blocked (should return 401 Unauthorized):
+```bash
+curl -v http://localhost:8080/api/v1/secure/items
+```
+
 Enjoy your new personal library!
