@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import './index.css';
 import { translations } from './translations';
 
@@ -23,7 +23,7 @@ function App() {
     return path.split('.').reduce((obj, key) => obj?.[key], translations[language]) || path;
   };
 
-  const fetchItems = async () => {
+  const fetchItems = useCallback(async () => {
     try {
       const response = await fetch(`http://localhost:8080/api/items?page=${currentPage}&size=5&query=${query}`);
       if (response.ok) {
@@ -34,11 +34,12 @@ function App() {
     } catch (error) {
       console.error('Failed to fetch items', error);
     }
-  };
+  }, [currentPage, query]);
 
   useEffect(() => {
-    fetchItems();
-  }, [currentPage, query]);
+    const load = async () => { await fetchItems(); };
+    load();
+  }, [fetchItems]);
 
   const openModal = (item = null) => {
     if (item) {
