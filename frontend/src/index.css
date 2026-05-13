@@ -9,6 +9,36 @@
   --danger-color: #ef4444;
   --success-color: #22c55e;
   --font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  --modal-bg: #1e293b;
+  --hover-bg: rgba(255, 255, 255, 0.05);
+  --th-bg: rgba(15, 23, 42, 0.8);
+  --input-bg: rgba(15, 23, 42, 0.5);
+  --btn-text: #0f172a;
+  --bg-gradient-1: rgba(56, 189, 248, 0.1);
+  --bg-gradient-2: rgba(139, 92, 246, 0.1);
+  --category-color: #a78bfa;
+  --title-gradient: linear-gradient(to right, #38bdf8, #818cf8);
+}
+
+:root[data-theme="light"] {
+  --bg-color: #f8fafc;
+  --card-bg: rgba(255, 255, 255, 0.9);
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
+  --accent-color: #0284c7;
+  --accent-glow: rgba(2, 132, 199, 0.3);
+  --border-color: rgba(0, 0, 0, 0.1);
+  --danger-color: #dc2626;
+  --success-color: #16a34a;
+  --modal-bg: #ffffff;
+  --hover-bg: rgba(0, 0, 0, 0.05);
+  --th-bg: rgba(241, 245, 249, 0.8);
+  --input-bg: #ffffff;
+  --btn-text: #ffffff;
+  --bg-gradient-1: rgba(2, 132, 199, 0.1);
+  --bg-gradient-2: rgba(139, 92, 246, 0.1);
+  --category-color: #7c3aed;
+  --title-gradient: linear-gradient(to right, #0284c7, #6d28d9);
 }
 
 .language-switcher {
@@ -30,7 +60,7 @@
 
 .lang-btn.active {
   background: var(--accent-color);
-  color: #0f172a;
+  color: var(--btn-text);
   border-color: var(--accent-color);
   font-weight: bold;
 }
@@ -45,8 +75,8 @@ body {
   justify-content: center;
   padding: 2rem;
   background-image:
-    radial-gradient(circle at 10% 20%, rgba(56, 189, 248, 0.1) 0%, transparent 20%),
-    radial-gradient(circle at 90% 80%, rgba(139, 92, 246, 0.1) 0%, transparent 20%);
+    radial-gradient(circle at 10% 20%, var(--bg-gradient-1) 0%, transparent 20%),
+    radial-gradient(circle at 90% 80%, var(--bg-gradient-2) 0%, transparent 20%);
 }
 
 #root {
@@ -87,7 +117,7 @@ select {
 
 .btn-primary {
   background: var(--accent-color);
-  color: #0f172a;
+  color: var(--btn-text);
   padding: 0.75rem 1.5rem;
   border-radius: 0.5rem;
   font-weight: 600;
@@ -114,7 +144,7 @@ select {
 }
 
 .form-input {
-  background: rgba(15, 23, 42, 0.5);
+  background: var(--input-bg);
   border: 1px solid var(--border-color);
   color: var(--text-primary);
   padding: 0.75rem;
@@ -169,13 +199,13 @@ td {
 }
 
 th {
-  background: rgba(15, 23, 42, 0.8);
+  background: var(--th-bg);
   font-weight: 600;
   color: var(--accent-color);
 }
 
 tr:hover {
-  background: rgba(255, 255, 255, 0.05);
+  background: var(--hover-bg);
 }
 
 .pagination {
@@ -220,7 +250,7 @@ tr:hover {
 }
 
 .modal-content {
-  background: #1e293b;
+  background: var(--modal-bg);
   padding: 2rem;
   border-radius: 1rem;
   width: 90%;

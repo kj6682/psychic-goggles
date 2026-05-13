@@ -10,6 +10,14 @@ function App() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingItem, setEditingItem] = useState(null);
   const [language, setLanguage] = useState('en');
+  const [theme, setTheme] = useState(() => {
+    return localStorage.getItem('theme') || 'dark';
+  });
+
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem('theme', theme);
+  }, [theme]);
 
   const [formData, setFormData] = useState({
     title: '',
@@ -98,6 +106,14 @@ function App() {
     <div className="app">
       <div className="language-switcher">
         <button
+          className="lang-btn"
+          onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+          style={{ marginRight: '1rem' }}
+          title={t('themeToggle') || 'Toggle Theme'}
+        >
+          {theme === 'dark' ? '☀️' : '🌙'}
+        </button>
+        <button
           className={`lang-btn ${language === 'en' ? 'active' : ''}`}
           onClick={() => setLanguage('en')}
         >
@@ -112,7 +128,7 @@ function App() {
       </div>
 
       <header className="app-header">
-        <h1 style={{ fontSize: '2.5rem', background: 'linear-gradient(to right, #38bdf8, #818cf8)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
+        <h1 style={{ fontSize: '2.5rem', background: 'var(--title-gradient)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
           {t('appTitle')}
         </h1>
         <p style={{ color: 'var(--text-secondary)' }}>{t('appSubtitle')}</p>
@@ -152,13 +168,13 @@ function App() {
             <tbody>
               {items.map((item) => (
                 <tr key={item.id}>
-                  <td style={{ fontWeight: 500, color: '#f8fafc' }}>{item.title}</td>
+                  <td style={{ fontWeight: 500, color: 'var(--text-primary)' }}>{item.title}</td>
                   <td>{item.authors}</td>
-                  <td><span className="tag" style={{ color: '#38bdf8' }}>{t(`types.${item.type.replace('-', '')}`) || item.type}</span></td>
-                  <td><span className="tag" style={{ color: '#a78bfa' }}>{item.category}</span></td>
+                  <td><span className="tag" style={{ color: 'var(--accent-color)' }}>{t(`types.${item.type.replace('-', '')}`) || item.type}</span></td>
+                  <td><span className="tag" style={{ color: 'var(--category-color)' }}>{item.category}</span></td>
                   <td>{item.location}</td>
                   <td>
-                    <button onClick={() => openModal(item)} style={{ marginRight: '0.5rem', color: '#38bdf8', background: 'none' }}>{t('actions.edit')}</button>
+                    <button onClick={() => openModal(item)} style={{ marginRight: '0.5rem', color: 'var(--accent-color)', background: 'none' }}>{t('actions.edit')}</button>
                     <button onClick={() => handleDelete(item.id)} className="btn-danger" style={{ padding: '0.25rem 0.5rem' }}>{t('actions.delete')}</button>
                   </td>
                 </tr>
